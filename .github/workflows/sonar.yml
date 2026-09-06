@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
     types: [opened, synchronize, reopened]
+  # Lets you re-run the scan from the Actions tab without a dummy commit.
+  workflow_dispatch:
 
 jobs:
   scan:
