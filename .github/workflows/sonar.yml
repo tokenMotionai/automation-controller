@@ -2,40 +2,21 @@ name: sonar
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    types: [opened, synchronize, reopened]
-  # Lets you re-run the scan from the Actions tab without a dummy commit.
+    types: [ opened, synchronize, reopened ]
   workflow_dispatch:
+
 
 jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-        with:
-          # Required. Sonar needs full history + blame data to work out
-          # what "new code" is. A shallow clone silently degrades the gate.
-          fetch-depth: 0
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
 
-      # Coverage would be produced here, before the scan. Sonar imports
-      # coverage, it never computes it. Uncomment once there are tests.
-      # - uses: actions/setup-python@v6
-      #   with:
-      #     python-version: '3.9'
-      # - run: pip install -r requirements.txt pytest coverage
-      # - run: coverage run -m pytest && coverage xml
-
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v8
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        # Note: SONAR_HOST_URL is deliberately NOT set. It is only needed for
-        # self-hosted SonarQube Server. For Cloud, the instance is chosen by
-        # `sonar.region` in sonar-project.properties (us -> sonarqube.us,
-        # unset -> sonarcloud.io). Setting it to an undefined `vars.*` here
-        # would pass an empty string.
-        #
-        # To make a red quality gate fail the build, uncomment:
-        # with:
-        #   args: -Dsonar.qualitygate.wait=true
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v8
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
